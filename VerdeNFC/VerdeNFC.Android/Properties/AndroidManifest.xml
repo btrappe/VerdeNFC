@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" package="de.edenweg.verdenfc" android:installLocation="auto" android:versionCode="5">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.BIND_NFC_SERVICE" />
+	<uses-permission android:name="android.permission.NFC" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<application android:label="VerdeNFC" android:icon="@drawable/coffee_bean_256"></application>
+</manifest>

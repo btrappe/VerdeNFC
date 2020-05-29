@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:VerdeNFC.Resources.Controls"
+             mc:Ignorable="d"
+             x:Class="VerdeNFC.Views.MainTabPage"
+             xmlns:vm="clr-namespace:VerdeNFC.ViewModels"
+             Title="{Binding Title}">
+    
+    <ContentPage.BindingContext>
+        <vm:MainTabViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+<!--        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
+                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
+                    <Image Source="xamarin_logo.png" VerticalOptions="Center" HeightRequest="64" />
+                </ContentView>
+            </StackLayout>
+        </StackLayout> -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Orientation="Vertical" Padding="10,10,10,10" Spacing="10">
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="1. Choose data source" FontAttributes="Bold" FontSize="Medium"/>
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Button Margin="0,10,0,0" Text="Pick the data file of source tag"
+                        Command="{Binding OpenFilePickerSrc}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="or" />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <controls:CheckButton x:Name="cbNFCRead"
+                                      Text="Read tag"
+                                      UncheckedText="Read tag"
+                                      CheckedText="Searching for tag ... (Press for cancel)"
+                                      BackgroundColor="{StaticResource Primary}"
+                                      TextColor="White"
+                                      Checked="{Binding Path=cbNFCRead}" />
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="2. Choose usage type" FontAttributes="Bold" FontSize="Medium" />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <controls:Checkbox x:Name="cbMultiUse" Text="Create multi-use tag" Checked="{Binding Path=cbMultiUse}" />
+                <!-- <Button Margin="0,10,0,0" Text="3. Pick the data file of destination tag and write data"
+                        Command="{Binding OpenFilePickerDest}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" /> -->
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="3. Write data to a new NFC tag" FontAttributes="Bold" FontSize="Medium" />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <controls:CheckButton x:Name="cbNFCWrite"
+                                      Text="Copy to tag"
+                                      UncheckedText="Copy to tag"
+                                      CheckedText="Searching for tag ... (Press for cancel)"
+                                      BackgroundColor="{StaticResource Primary}"
+                                      TextColor="White"
+                                      Checked="{Binding Path=cbNFCWrite}" />
+
+                <!-- <Button Margin="0,10,0,0" Text="Learn more"
+                        Command="{Binding OpenWebCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" /> -->
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+    
+</ContentPage>

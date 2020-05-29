@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Plugin.Toast" Version="2.1.2" />
+    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1039999" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.0.1" />  
+    <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.34" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\DataDetails2Page.xaml.cs">
+      <DependentUpon>DataDetails2Page.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\DataDetailsPage.xaml.cs">
+      <DependentUpon>DataDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainTabPage.xaml.cs">
+      <DependentUpon>MainTabPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NewItemPage.xaml.cs">
+      <DependentUpon>NewItemPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadXFormsNugetUpgradeInfoBarVerdeNFCHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+</Project>
