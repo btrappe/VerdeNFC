@@ -7,6 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Setup NuGet.exe
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
     - name: Android
       run: |
         nuget restore VerdeNFC.sln
