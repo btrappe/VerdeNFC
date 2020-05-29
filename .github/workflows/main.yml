@@ -19,6 +19,10 @@ jobs:
         cd VerdeNFC
         cd VerdeNFC.Android
         msbuild VerdeNFC.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+    - uses: actions/upload-artifact@v2
+      with:
+        name: VerdeNFC.Android
+        path: VerdeNFC/VerdeNFC.Android/bin/Debug/
         
   iOS:
     runs-on: macos-latest
@@ -29,3 +33,7 @@ jobs:
         nuget restore VerdeNFC.sln
         cd VerdeNFC
         msbuild VerdeNFC.iOS/VerdeNFC.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+    - uses: actions/upload-artifact@v2
+      with:
+        name: VerdeNFC.iOS
+        path: VerdeNFC/VerdeNFC.iOS/bin/iPhoneSimulator/Debug/
