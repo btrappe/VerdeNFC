@@ -18,7 +18,7 @@ jobs:
         nuget restore VerdeNFC.sln
         cd VerdeNFC
         cd VerdeNFC.Android
-        msbuild VerdeNFC.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        msbuild VerdeNFC.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug /r:True /t:SignAndroidPackage /p:AndroidSdkDirectory=/android/sdk
     - uses: actions/upload-artifact@v2
       with:
         name: VerdeNFC.Android
