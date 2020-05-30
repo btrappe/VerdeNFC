@@ -22,7 +22,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: VerdeNFC.Android
-        path: VerdeNFC/VerdeNFC.Android/bin/Debug/*.apk
+        path: VerdeNFC/VerdeNFC.Android/bin/Release/*.apk
         
   iOS:
     runs-on: macos-latest
