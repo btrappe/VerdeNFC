@@ -27,9 +27,10 @@
     <Compile Update="Views\MainTabPage.xaml.cs">
       <DependentUpon>MainTabPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\NewItemPage.xaml.cs">
-      <DependentUpon>NewItemPage.xaml</DependentUpon>
-    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadXFormsNugetUpgradeInfoBarVerdeNFCHideInfoBar="True" /></VisualStudio></ProjectExtensions>
