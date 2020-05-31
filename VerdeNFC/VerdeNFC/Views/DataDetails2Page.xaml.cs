@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using VerdeNFC.Models;
+//using VerdeNFC.Models;
 using VerdeNFC.ViewModels;
 
 namespace VerdeNFC.Views

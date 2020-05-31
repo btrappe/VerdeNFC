@@ -13,7 +13,7 @@ namespace VerdeNFC
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
+            //DependencyService.Register<MockDataStore>();
             DependencyService.Register<DataBag>();
 
             object value;
