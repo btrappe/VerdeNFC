@@ -8,7 +8,7 @@
              Title="{Binding Title}">
 
     <StackLayout Spacing="20" Padding="15">
-        <Label Text="Destination Data Content:" FontSize="Medium" />
+        <Label Text="Destination interpreted data content (WiP):" FontSize="Medium" />
         <ScrollView>
             <Label Text="{Binding DataText, Mode=TwoWay}" d:Text="Item name" FontSize="Medium"/>
         </ScrollView>
