@@ -57,14 +57,14 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <controls:CheckButton x:Name="cbNFCRead"
+                <controls:CheckButton x:Name="NFCRead"
                                       Text="Read tag"
                                       UncheckedText="Read tag"
                                       CheckedText="Searching for tag ... (Press for cancel)"
                                       BackgroundColor="{StaticResource Primary}"
                                       TextColor="White"
                                       Checked="{Binding Path=cbNFCRead}"
-                                      IsEnabled="{Binding Path=cbNFCWrite}"
+                                      IsEnabled="{Binding Path=cbNFCReadEnabled}"
                  />
 
                 <Label>
@@ -77,6 +77,17 @@
                     </Label.FormattedText>
                 </Label>
                 <controls:Checkbox x:Name="cbMultiUse" Text="Create multi-use tag" Checked="{Binding Path=cbMultiUse}" />
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="3. Choose pause after roasting" FontAttributes="Bold" FontSize="Medium" />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Slider Minimum="0" Maximum="300" Value="{Binding Path=nPause}"/>
+                <Label x:Name="displayLabel" Text="{Binding Path=nPause,StringFormat='{0:D}'}" HorizontalOptions="Center"/>
                 <!-- <Button Margin="0,10,0,0" Text="3. Pick the data file of destination tag and write data"
                         Command="{Binding OpenFilePickerDest}"
                         BackgroundColor="{StaticResource Primary}"
@@ -86,19 +97,19 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="3. Write data to a new NFC tag" FontAttributes="Bold" FontSize="Medium" />
+                                <Span Text="4. Write data to a new NFC tag" FontAttributes="Bold" FontSize="Medium" />
                             </FormattedString.Spans>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <controls:CheckButton x:Name="cbNFCWrite"
+                <controls:CheckButton x:Name="NFCWrite"
                                       Text="Copy to tag"
                                       UncheckedText="Copy to tag"
                                       CheckedText="Searching for tag ... (Press for cancel)"
                                       BackgroundColor="{StaticResource Primary}"
                                       TextColor="White"
                                       Checked="{Binding Path=cbNFCWrite}" 
-                                      IsEnabled="{Binding Path=cbNFCRead}"
+                                      IsEnabled="{Binding Path=cbNFCWriteEnabled}"
                 />
 
                 <!-- <Button Margin="0,10,0,0" Text="Learn more"

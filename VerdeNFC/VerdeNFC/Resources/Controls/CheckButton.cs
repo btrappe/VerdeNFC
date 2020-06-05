@@ -69,7 +69,7 @@ namespace VerdeNFC.Resources.Controls
         {
             CheckedChanged?.Invoke(this, EventArgs.Empty);
         }
-
+        /*
         private Boolean _IsEnabled = true;
         public new Boolean IsEnabled
         {
@@ -92,7 +92,7 @@ namespace VerdeNFC.Resources.Controls
                 base.IsEnabled = value;
             }
         }
-
+        */
         public void OnEnabled_Changed()
         {
 

@@ -50,6 +50,14 @@ namespace VerdeNFC.ViewModels
                     _cbNFCRead = false;
                 }
                 OnPropertyChanged("cbNFCRead");
+                OnPropertyChanged("cbNFCWriteEnabled");
+            }
+        }
+        public bool cbNFCReadEnabled
+        {
+            get
+            {
+                return !_cbNFCWrite;
             }
         }
 
@@ -94,9 +102,37 @@ namespace VerdeNFC.ViewModels
                     _cbNFCWrite = false;
                 }
                 OnPropertyChanged("cbNFCWrite");
+                OnPropertyChanged("cbNFCReadEnabled");
             }
         }
 
+        public bool cbNFCWriteEnabled
+        {
+            get
+            {
+                return !_cbNFCRead;
+            }
+        }
+
+        int _nPause;
+      
+        public int nPause
+        { 
+            get
+            {
+                return _nPause;
+            }
+            set
+            {
+                _nPause = value;
+                byte[] mem = DataBag.GetData();
+                mem[48] = Convert.ToByte(_nPause / 256);
+                mem[49] = Convert.ToByte(_nPause % 256);
+                DataBag.SetData(mem);
+                OnPropertyChanged("nPause");
+                MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
+            }
+        }
         readonly string _downloadFolder;
 
         public MainTabViewModel()
@@ -108,6 +144,8 @@ namespace VerdeNFC.ViewModels
             cbMultiUse = true;
             Current = this;
             _downloadFolder = (string) Application.Current.Properties["FileSaveFolder"];
+            _nPause = 0;
+            cbMultiUse = true;
         }
 
         public async Task OpenFilePickerSrcAsync()
@@ -145,6 +183,8 @@ namespace VerdeNFC.ViewModels
                         Console.WriteLine("Error: unknown line format: {0}", line);
                     }
                 }
+
+                nPause = 256 * mem[48] + mem[49];
 
                 DataBag.SetData(mem);
                 MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
