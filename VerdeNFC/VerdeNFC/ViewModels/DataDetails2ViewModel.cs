@@ -29,11 +29,18 @@ namespace VerdeNFC.Views
             text += string.Format("i/LCK {0:X2}{1:X2}{2:X2} \n\n", mem[9], mem[10], mem[11]);
             text += string.Format("OTP   {0:X2}{1:X2}{2:X2}{3:X2} \n", mem[12], mem[13], mem[14], mem[15]);
 
-            text += string.Format("Rec1  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", 2*mem[16], mem[17], mem[18], mem[19]);
-            text += string.Format("Rec2  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2*mem[21], mem[22], mem[23], mem[24], mem[25]);
-            text += string.Format("Rec3  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", mem[26], 2*mem[27], mem[28], mem[29]);
-            text += string.Format("Rec4  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2*mem[31], mem[32], mem[33], mem[34], 20*mem[35]);
-            text += string.Format("Rec5  {0:X2}{1:X2} Grind {2:D}s \n\n", mem[37], mem[38], mem[39]);
+            if ((mem[41] == 1) || (mem[41] == 2) || (mem[41] == 3))
+            {
+                text += string.Format("Rec1  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", 2 * mem[16], mem[17], mem[18], mem[19]);
+                text += string.Format("Rec2  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[21], mem[22], mem[23], mem[24], mem[25]);
+                text += string.Format("Rec3  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", mem[26], 2 * mem[27], mem[28], mem[29]);
+                text += string.Format("Rec4  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[31], mem[32], mem[33], mem[34], 20 * mem[35]);
+            }
+
+            if ((mem[41] == 4) || (mem[41] == 5) || (mem[41] == 0x12))
+                text += string.Format("Rec5  {0:X2}{1:X2} Grind {2:D}s \n\n", mem[37], mem[38], mem[39]);
+            else
+                text += string.Format("Rec5  {0:X2}{1:X2}\n\n", mem[37], mem[38]);
 
             text += string.Format("Type  {0:X2} Param {1:D} \n", mem[41], 600*mem[42]);
 
@@ -105,7 +112,8 @@ namespace VerdeNFC.Views
 
             text += "\n";
             text += string.Format("CRC16 {0:X2}{1:X2} \n", mem[46], mem[47]);
-            text += string.Format("Pause {0} min\n", mem[48] * 0x100 + mem[49]);
+            if ((mem[41] == 1) || (mem[41] == 3))
+                text += string.Format("Pause {0} min\n", mem[48] * 0x100 + mem[49]);
 
             for (int i = 12; i < 20; i++)
                 text += string.Format("{0:D2}  {1:X2}{2:X2}{3:X2}{4:X2} \n", i, mem[4 * i], mem[4 * i + 1], mem[4 * i + 2], mem[4 * i + 3]);
