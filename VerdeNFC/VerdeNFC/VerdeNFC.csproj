@@ -29,9 +29,5 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadXFormsNugetUpgradeInfoBarVerdeNFCHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 </Project>

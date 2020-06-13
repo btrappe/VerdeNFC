@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using VerdeNFC.Services;
 using VerdeNFC.Util;
 using Plugin.Toast;
+using VerdeNFC.Models;
+using System.Collections.Generic;
 
 namespace VerdeNFC.ViewModels
 {
@@ -22,6 +24,17 @@ namespace VerdeNFC.ViewModels
         public delegate void NFCControlListening(bool Write);
         public event NFCControlListening NFCStartListening;
         public event NFCControlListening NFCStopListening;
+
+        private List<RoastProfile> _roastProfiles = new List<RoastProfile>();
+        public List<RoastProfile> RoastProfiles
+        {
+            get { return _roastProfiles; }
+            set
+            {
+                _roastProfiles = value;
+                OnPropertyChanged(nameof(RoastProfiles));
+            }
+        }
 
         bool _cbNFCRead;
         public bool cbNFCRead
@@ -146,6 +159,24 @@ namespace VerdeNFC.ViewModels
             _downloadFolder = (string) Application.Current.Properties["FileSaveFolder"];
             _nPause = 0;
             cbMultiUse = true;
+
+            // 0      - nothing choosen
+            // 1...99 - data source is Data member
+            // 100..  - external data source (file or scanned NFC tag)
+
+            RoastProfiles.Add(new RoastProfile() { Id = 0, Name = "(choose one)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = true, isBrewProfile = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true });
+
+            RoastProfiles.Add(new RoastProfile() { Id = 1, Name = "Brazil", Data = "2323", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 2, Name = "Brazil 2", Data = "2323", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false });
+
+            RoastProfiles.Add(new RoastProfile() { Id = 90, Name = "(Air Filter Reset)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 91, Name = "(Maintenance: Descale)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 92, Name = "(Maintenance: Grinder clean)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false });
         }
 
         public async Task OpenFilePickerSrcAsync()

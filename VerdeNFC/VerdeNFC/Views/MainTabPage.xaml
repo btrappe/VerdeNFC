@@ -48,6 +48,13 @@
                         Command="{Binding OpenFilePickerSrc}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
+                <Picker Margin="0,10,0,0"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        ItemsSource="{Binding Path=RoastProfiles}"
+                        SelectedIndex="1"
+                />
+                <!--                        ItemDisplayBinding="{Binding Path=Name}"  -->
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
