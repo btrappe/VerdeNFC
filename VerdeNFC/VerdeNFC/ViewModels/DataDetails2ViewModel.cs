@@ -32,17 +32,17 @@ namespace VerdeNFC.Views
             if ((mem[41] == 1) || (mem[41] == 2) || (mem[41] == 3))
             {
                 text += string.Format("Rec1  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", 2 * mem[16], mem[17], mem[18], mem[19]);
-                text += string.Format("Rec2  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[21], mem[22], mem[23], mem[24], mem[25]);
-                text += string.Format("Rec3  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", mem[26], 2 * mem[27], mem[28], mem[29]);
-                text += string.Format("Rec4  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[31], mem[32], mem[33], mem[34], 20 * mem[35]);
+                text += string.Format("Rec2  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[21], mem[22], mem[23], mem[24], 5 * mem[25]);
+                text += string.Format("Rec3  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}%\n", 2 * mem[26], mem[27], mem[28], mem[29]);
+                text += string.Format("Rec4  Temp1:{0}° Temp2:{1}°\n      Pmax={2:D}% P={3:D}% {4:D2}s \n", 2 * mem[31], mem[32], mem[33], mem[34], 5 * mem[35]);
             }
 
             if ((mem[41] == 4) || (mem[41] == 5) || (mem[41] == 0x12))
-                text += string.Format("Rec5  {0:X2}{1:X2} Grind {2:D}s \n\n", mem[37], mem[38], mem[39]);
+                text += string.Format("Rec5             Temp2:{0}°\n      Pmax={1:D}%\n      Grind {2}s \n\n", mem[37], mem[38], mem[39]);
             else
-                text += string.Format("Rec5  {0:X2}{1:X2}\n\n", mem[37], mem[38]);
+                text += string.Format("Rec5             Temp2:{0}°\n      Pmax={1:D}%\n\n", mem[37], mem[38]);
 
-            text += string.Format("Type  {0:X2} Param {1:D} \n", mem[41], 600*mem[42]);
+            text += string.Format("Type  {0:X2} Time_Stat_7 {1} min \n", mem[41], mem[42]);
 
             text += "command ";
 

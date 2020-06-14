@@ -16,7 +16,7 @@ namespace VerdeNFC.Models
 
         public override string ToString()
         {
-            return this.Id + " - " + this.Name;
+            return String.Format("{0:D3} - {1}", this.Id, this.Name);
         }
 
     }
