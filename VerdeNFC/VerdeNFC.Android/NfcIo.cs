@@ -144,6 +144,7 @@ namespace VerdeNFC.Droid
                     for (int i = 4; i < 16; i++)
                         ev1.WritePage(i, dstData.Skip(4 * i).Take(4).ToArray());
 
+                    MainTabViewModel.Current?.SetControlsVisibility(mem[49]);
                     MainTabViewModel.Current?.DataBag.SetData(dstData);
                     WriteMode = false;
                 }

@@ -92,7 +92,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <controls:Checkbox x:Name="cbMultiUse" Text="Create multi-use tag" Checked="{Binding Path=cbMultiUse}" />
+                <controls:Checkbox x:Name="cbMultiUse" Text="Create multi-use tag" Checked="{Binding Path=cbMultiUse}" IsVisible="{Binding Path=cbMultiUseEnabled}" />
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
@@ -102,8 +102,8 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Slider Minimum="0" Maximum="300" Value="{Binding Path=nPause}"/>
-                <Label x:Name="displayLabel" Text="{Binding Path=nPause,StringFormat='{0:D}'}" HorizontalOptions="Center"/>
+                <Slider Minimum="0" Maximum="300" Value="{Binding Path=nPause}" IsVisible="{Binding Path=nPauseEnabled}"/>
+                <Label x:Name="displayLabel" Text="{Binding Path=nPause,StringFormat='{0:D} min'}" HorizontalOptions="Center"  IsVisible="{Binding Path=nPauseEnabled}" />
                 <!-- <Button Margin="0,10,0,0" Text="3. Pick the data file of destination tag and write data"
                         Command="{Binding OpenFilePickerDest}"
                         BackgroundColor="{StaticResource Primary}"

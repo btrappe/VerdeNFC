@@ -87,6 +87,7 @@ namespace VerdeNFC.ViewModels
                 }
 
                 nPause = 256 * mem[48] + mem[49];
+//                SetControlsVisibility(mem[41]);
 
                 DataBag.SetData(mem);
                 MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
@@ -147,6 +148,13 @@ namespace VerdeNFC.ViewModels
                 OnPropertyChanged("cbMultiUse");
             }
         }
+        public bool cbNFCWriteEnabled
+        {
+            get
+            {
+                return !_cbNFCRead;
+            }
+        }
 
         bool _cbNFCWrite;
         public bool cbNFCWrite
@@ -179,16 +187,21 @@ namespace VerdeNFC.ViewModels
             }
         }
 
-        public bool cbNFCWriteEnabled
+        private bool _cbMultiUseEnabled;
+        public bool cbMultiUseEnabled
         {
             get
             {
-                return !_cbNFCRead;
+                return _cbMultiUseEnabled;
+            }
+            set
+            {
+                _cbMultiUseEnabled = value;
+                OnPropertyChanged("cbMultiUseEnabled");
             }
         }
 
-        int _nPause;
-      
+        private int _nPause;
         public int nPause
         { 
             get
@@ -206,6 +219,21 @@ namespace VerdeNFC.ViewModels
                 MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
             }
         }
+
+        private bool _nPauseEnabled;
+        public bool nPauseEnabled
+        {
+            get
+            {
+                return _nPauseEnabled;
+            }
+            set
+            {
+                _nPauseEnabled = value;
+                OnPropertyChanged("nPauseEnabled");
+            }
+        }
+
         readonly string _downloadFolder;
 
         public MainTabViewModel()
@@ -287,6 +315,7 @@ namespace VerdeNFC.ViewModels
                 }
 
                 nPause = 256 * mem[48] + mem[49];
+                SetControlsVisibility(mem[41]);
 
                 DataBag.SetData(mem);
                 MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
@@ -363,6 +392,88 @@ namespace VerdeNFC.ViewModels
             return;
         }
 
+        public void SetControlsVisibility(byte Type)
+        {
+            RoastProfile r;
+            switch (Type)
+            {
+                case 1:
+                    r = new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = true, isBrewProfile = true };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = true;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 2:
+                    r = new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 4:
+                    r = new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 5:
+                    r = new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = true };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 6:
+                    r = new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 0x0f:
+                    r = new RoastProfile() { Id = 91, Name = "(Air Filter Reset)", Data = "AA96644B05 AA96413278  AAAC5F5005 AAB6414696 376E5A2D 23 0F  0F  000601 8D7C 0000", isRoastProfile = false, isGrindProfile = false, isBrewProfile = false };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 0x12:
+                    r = new RoastProfile() { Id = 93, Name = "(Maintenance: Grinder clean)", Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+                case 0x13:
+                    r = new RoastProfile() { Id = 92, Name = "(Maintenance: Descale)", Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+
+                // RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = true, isBrewProfile = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = true, isBrewProfile = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isRoastProfile = true, isGrindProfile = false, isBrewProfile = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true});
+
+                default:
+                    r = new RoastProfile() { Id = 92, Name = "(Maintenance: Descale)", Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true };
+                    RoastProfiles.Add(r);
+                    RoastProfileSel = r;
+                    nPauseEnabled = false;
+                    cbMultiUseEnabled = true;
+                    break;
+            }
+        }
         public static byte [] MergeTagData(byte [] mem1stCard, byte [] mem)
         {
             Buffer.BlockCopy(mem, 0, mem1stCard, 0, 16);
