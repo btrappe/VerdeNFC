@@ -10,9 +10,7 @@ namespace VerdeNFC.Models
         public string Name { get; set; }
         public string Data { get; set; }
 
-        public bool isRoastProfile { get; set; }
-        public bool isGrindProfile { get; set; }
-        public bool isBrewProfile { get; set; }
+        public bool isManualChoiceAllowed { get; set; }
 
         public override string ToString()
         {
