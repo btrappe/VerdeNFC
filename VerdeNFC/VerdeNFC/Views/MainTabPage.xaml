@@ -92,7 +92,15 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <controls:Checkbox x:Name="cbMultiUse" Text="Create multi-use tag" Checked="{Binding Path=cbMultiUse}" IsVisible="{Binding Path=cbMultiUseEnabled}" />
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" x:Name="cbMultiUse" IsChecked="{Binding Path=cbMultiUse}" IsVisible="{Binding Path=cbMultiUseEnabled}" Color="{StaticResource Primary}" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="multi-use tag" VerticalOptions="Center"/>
+                </Grid>
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>

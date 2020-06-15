@@ -434,21 +434,18 @@ namespace VerdeNFC.ViewModels
                     break;
                 case 0x0f:
                     r = new RoastProfile() { Id = 91, Name = "(Air Filter Reset)", Data = "AA96644B05 AA96413278  AAAC5F5005 AAB6414696 376E5A2D 23 0F  0F  000601 8D7C 0000", isRoastProfile = false, isGrindProfile = false, isBrewProfile = false };
-                    RoastProfiles.Add(r);
                     RoastProfileSel = r;
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
                     break;
                 case 0x12:
                     r = new RoastProfile() { Id = 93, Name = "(Maintenance: Grinder clean)", Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isRoastProfile = false, isGrindProfile = true, isBrewProfile = false };
-                    RoastProfiles.Add(r);
                     RoastProfileSel = r;
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
                     break;
                 case 0x13:
                     r = new RoastProfile() { Id = 92, Name = "(Maintenance: Descale)", Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isRoastProfile = false, isGrindProfile = false, isBrewProfile = true };
-                    RoastProfiles.Add(r);
                     RoastProfileSel = r;
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
