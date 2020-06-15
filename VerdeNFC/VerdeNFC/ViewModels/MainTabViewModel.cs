@@ -16,6 +16,53 @@ using System.Collections.ObjectModel;
 
 namespace VerdeNFC.ViewModels
 {
+    public class PauseDuration : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // minutes
+            int v1 = GetMinutes((int)value);
+
+            if (v1 < 60)
+                return string.Format("{0} min", v1);
+            if (v1 < 1440)
+                return string.Format("{0}h {1}min", (int)(v1 / 60), v1 % 60);
+            return string.Format("{0} days {1}h {2}min", (int)v1 / 1440, (int)((v1 % 1440) / 60), v1 % 60);
+        }
+
+        public static int GetMinutes(int v)
+        {
+            // first 2 hours - 1 minute steps 
+            if (v < 120)
+                return v;
+            // 2-6 hours - 5 minute steps - (6-2)*12=48
+            else if (v < 168)
+                return 120 + 5 * (v - 120);
+            // 6-24h -  15min steps (24-6)*4 = 72 steps
+            else //if (v < 240)
+                return 360 + 15 * (v - 168);
+        }
+
+        public static int GetSliderTicks(int v)
+        {
+            // first 2 hours - 1 minute steps 
+            if (v < 120)
+                return v;
+            // 2-6 hours - 5 minute steps - (6-2)*12=48
+            else if (v < 360)
+                return (int)(v - 120) / 5 + 120;
+            // 6-24h -  15min steps (24-6)*4 = 72 steps
+            else //if (v < 240)
+                return (v-360) / 15 + 168;
+
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MainTabViewModel : BaseViewModel
     {
         public static MainTabViewModel Current;
@@ -26,6 +73,7 @@ namespace VerdeNFC.ViewModels
         public event NFCControlListening NFCStartListening;
         public event NFCControlListening NFCStopListening;
 
+        #region RoastProfilesPicker
         private ObservableCollection<RoastProfile> _roastProfiles = new ObservableCollection<RoastProfile>();
         public ObservableCollection<RoastProfile> RoastProfiles
         {
@@ -92,7 +140,7 @@ namespace VerdeNFC.ViewModels
                     Console.WriteLine("Error: unknown line format: {0}", line);
                 }
 
-                nPause = 256 * mem[48] + mem[49];
+                nPause = PauseDuration.GetSliderTicks(256 * mem[48] + mem[49]);
                 SetControlsVisibility(mem[41], false);
 
                 DataBag.SetData(mem);
@@ -101,7 +149,9 @@ namespace VerdeNFC.ViewModels
 
             lastSelectedRoastProfile = RoastProfileSel;
         }
+        #endregion
 
+        #region NFCReadButton
         bool _cbNFCRead;
         public bool cbNFCRead
         {
@@ -139,20 +189,9 @@ namespace VerdeNFC.ViewModels
                 return !_cbNFCWrite;
             }
         }
-
-        bool _cbMultiUse;
-        public bool cbMultiUse
-        {
-            get
-            {
-                return _cbMultiUse;
-            }
-            set
-            {
-                _cbMultiUse = value;
-                OnPropertyChanged("cbMultiUse");
-            }
-        }
+        #endregion
+        
+        #region NFCWriteButton
         public bool cbNFCWriteEnabled
         {
             get
@@ -191,7 +230,22 @@ namespace VerdeNFC.ViewModels
                 OnPropertyChanged("cbNFCReadEnabled");
             }
         }
-
+        #endregion
+        
+        #region MultiUseCB
+        bool _cbMultiUse;
+        public bool cbMultiUse
+        {
+            get
+            {
+                return _cbMultiUse;
+            }
+            set
+            {
+                _cbMultiUse = value;
+                OnPropertyChanged("cbMultiUse");
+            }
+        }
         private bool _cbMultiUseEnabled;
         public bool cbMultiUseEnabled
         {
@@ -205,7 +259,9 @@ namespace VerdeNFC.ViewModels
                 OnPropertyChanged("cbMultiUseEnabled");
             }
         }
+        #endregion
 
+        #region nPause
         private int _nPause;
         public int nPause
         { 
@@ -217,8 +273,8 @@ namespace VerdeNFC.ViewModels
             {
                 _nPause = value;
                 byte[] mem = DataBag.GetData();
-                mem[48] = Convert.ToByte(_nPause / 256);
-                mem[49] = Convert.ToByte(_nPause % 256);
+                mem[48] = Convert.ToByte(PauseDuration.GetMinutes(_nPause) / 256);
+                mem[49] = Convert.ToByte(PauseDuration.GetMinutes(_nPause) % 256);
                 DataBag.SetData(mem);
                 OnPropertyChanged("nPause");
                 MessagingCenter.Send(this, "DataChanged", DataBag.GetData());
@@ -238,6 +294,7 @@ namespace VerdeNFC.ViewModels
                 OnPropertyChanged("nPauseEnabled");
             }
         }
+        #endregion
 
         readonly string _downloadFolder;
 
@@ -257,8 +314,6 @@ namespace VerdeNFC.ViewModels
             // 1...99 - data source is Data member
             // 100..  - external data source (file or scanned NFC tag)
 
-            RoastProfiles.Add(new RoastProfile() { Id = 0, Name = "(choose one)", Data = "", isManualChoiceAllowed = false });
-
             RoastProfiles.Add(new RoastProfile() { Id = 1, Name = "Brazil",                        Data = "AAB84B4B00 AAB8324B5A  AAB64B4B00 AAB6324B64 3C3C462D 32 02  1E  000501 D810 0005", isManualChoiceAllowed = true });
             RoastProfiles.Add(new RoastProfile() { Id = 2, Name = "80g Roast only",                Data = "AAAE4B5A05 AAAE415078  AAB4415A05 AAB4415050 37465A50 23 02  0F  000601 6113 0000", isManualChoiceAllowed = true });
             RoastProfiles.Add(new RoastProfile() { Id = 3, Name = "universal light roast",         Data = "AAB94B3205 AAB94B325A  AAB94B3205 AAB94B3232 3C463250 32 02  1E  000601 5D03 000A", isManualChoiceAllowed = true });
@@ -273,8 +328,11 @@ namespace VerdeNFC.ViewModels
             RoastProfiles.Add(new RoastProfile() { Id = 91, Name = "Maintenance: Air Filter",      Data = "AA96644B05 AA96413278  AAAC5F5005 AAB6414696 376E5A2D 23 0F  0F  000601 8D7C 0000", isManualChoiceAllowed = true });
             RoastProfiles.Add(new RoastProfile() { Id = 92, Name = "Maintenance: Descale",         Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isManualChoiceAllowed = true });
             RoastProfiles.Add(new RoastProfile() { Id = 93, Name = "Maintenance: Grinder clean",   Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isManualChoiceAllowed = true });
-            RoastProfileSel = RoastProfiles[0];
-            lastSelectedRoastProfile = RoastProfiles[0];
+
+            RoastProfiles.Add(new RoastProfile() { Id = 0, Name = "(choose one)", Data = "", isManualChoiceAllowed = false });
+
+            RoastProfileSel = RoastProfiles[RoastProfiles.Count - 1];
+            lastSelectedRoastProfile = RoastProfiles[RoastProfiles.Count - 1];
 
         }
 
@@ -314,7 +372,7 @@ namespace VerdeNFC.ViewModels
                     }
                 }
 
-                nPause = 256 * mem[48] + mem[49];
+                nPause = PauseDuration.GetSliderTicks(256 * mem[48] + mem[49]);
                 SetControlsVisibility(mem[41]);
 
                 DataBag.SetData(mem);
@@ -328,6 +386,7 @@ namespace VerdeNFC.ViewModels
 
             return;
         }
+
         public async Task OpenFilePickerDestAsync()
         {
             try
@@ -487,7 +546,6 @@ namespace VerdeNFC.ViewModels
             return mem1stCard;
         }
 
-        public ICommand OpenWebCommand { get; }
         public ICommand OpenFilePickerSrc { get; }
         public ICommand OpenFilePickerDest { get; }
     }

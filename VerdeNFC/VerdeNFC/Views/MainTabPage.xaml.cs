@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using VerdeNFC.ViewModels;
 using VerdeNFC.Models;
+using System.Globalization;
 
 namespace VerdeNFC.Views
 {
