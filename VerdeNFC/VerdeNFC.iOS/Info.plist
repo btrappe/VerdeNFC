@@ -34,5 +34,9 @@
 	<string>VerdeNFC</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<string>com.apple.developer.nfc.readersession.iso7816.select.identifiers</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>Read/Write Mifare Ultralight NFC tags for Bonaverde Berlin Coffee Roasting machine.</string>
 </dict>
 </plist>
