@@ -46,6 +46,9 @@ namespace VerdeNFC.iOS
                 MainTabViewModel.Current?.DataBag.SetData(FirstTag);
             });
 
+            NfcSession.InvalidateSession();
+            NfcSession = null;
+
         }
 
         public override void DidInvalidate(NFCTagReaderSession session, NSError error)

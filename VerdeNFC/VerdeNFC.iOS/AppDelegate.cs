@@ -55,20 +55,13 @@ namespace VerdeNFC.iOS
         public override void OnActivated(UIApplication uiApplication)
         {
             base.OnActivated(uiApplication);
-            NfcSession = new NFCTagReaderSession(NFCPollingOption.Iso14443 | NFCPollingOption.Iso15693, nfc, DispatchQueue.CurrentQueue)
-            {
-                // AlertMessage = "NFC not available."
-            };
-            NfcSession?.BeginSession();
-
-            /*
             if (!NfcIo.registered && (MainTabViewModel.Current != null))
             {
                 MainTabViewModel.Current.NFCStartListening += NfcIo.Current.StartListening;
                 MainTabViewModel.Current.NFCStopListening += NfcIo.Current.StopListening;
                 NfcIo.registered = true;
             }
-            */
+            
             //NfcIo.Current.StartListening(true);
         }
         //
