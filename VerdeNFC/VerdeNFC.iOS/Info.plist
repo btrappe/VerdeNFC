@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>VerdeNFC</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.edenweg.VerdeNFC</string>
+	<string>com.thinprint.betra.nfctest2</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
@@ -34,9 +34,11 @@
 	<string>VerdeNFC</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<string>com.apple.developer.nfc.readersession.iso7816.select.identifiers</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>Read/Write Mifare Ultralight NFC tags for Bonaverde Berlin Coffee Roasting machine.</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<string>com.apple.developer.nfc.readersession.iso7816.select-identifiers</string>
 </dict>
 </plist>

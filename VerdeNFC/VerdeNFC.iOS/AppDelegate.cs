@@ -1,37 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plugin.NFC;
-using Plugin.Toast;
 
 using Foundation;
 using UIKit;
 
+using VerdeNFC.ViewModels;
+using CoreNFC;
+using CoreFoundation;
+
 namespace VerdeNFC.iOS
 {
+    public class NFCDelegate : NFCTagReaderSessionDelegate
+    {
+        /// <summary>
+		/// Event raised when NFC tags are detected
+		/// </summary>
+		/// <param name="session">iOS <see cref="NFCTagReaderSession"/></param>
+		/// <param name="tags">Array of iOS <see cref="INFCTag"/></param>
+		public override void DidDetectTags(NFCTagReaderSession session, INFCTag[] tags)
+        {
+            var _tag = tags.First();
+
+            var connectionError = string.Empty;
+            session.ConnectTo(_tag, (error) =>
+            {
+                if (error != null)
+                {
+                    connectionError = error.LocalizedDescription;
+                    return;
+                }
+            });
+
+            var nMifareTag = _tag.GetNFCMiFareTag();
+            //nMifareTag.SendMiFareCommand();
+
+        }
+
+        public override void DidInvalidate(NFCTagReaderSession session, NSError error)
+        {
+          //  throw new NotImplementedException();
+        }
+    };
+
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
+        NFCTagReaderSession NfcSession { get; set; }
+        NFCDelegate nfc = new NFCDelegate();
+            
         public override void OnActivated(UIApplication uiApplication)
         {
             base.OnActivated(uiApplication);
-            if (CrossNFC.IsSupported)
+            NfcSession = new NFCTagReaderSession(NFCPollingOption.Iso14443 | NFCPollingOption.Iso15693, nfc, DispatchQueue.CurrentQueue)
             {
-                if (!CrossNFC.Current.IsAvailable)
-                    CrossToastPopUp.Current.ShowToastMessage("NFC not supported");
-                else if (!CrossNFC.Current.IsEnabled)
-                    CrossToastPopUp.Current.ShowToastMessage("NFC not enabled");
-                else
-                    CrossToastPopUp.Current.ShowToastMessage("NFC ready");
+                // AlertMessage = "NFC not available."
+            };
+            NfcSession?.BeginSession();
 
-
+            /*
+            if (!NfcIo.registered && (MainTabViewModel.Current != null))
+            {
+                MainTabViewModel.Current.NFCStartListening += NfcIo.Current.StartListening;
+                MainTabViewModel.Current.NFCStopListening += NfcIo.Current.StopListening;
+                NfcIo.registered = true;
             }
-
+            */
+            //NfcIo.Current.StartListening(true);
         }
-
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
         // method you should instantiate the window, load the UI into it and then make the window

@@ -47,13 +47,13 @@
     <MtouchArch>ARM64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignEntitlements>
-    </CodesignEntitlements>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
     <CodesignProvision />
     <CodesignExtraArgs />
     <CodesignResourceRules />
+    <MtouchSdkVersion>13.5</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -80,10 +80,6 @@
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NfcIo.cs" />
-    <None Include="Info %28Kopie%29.plist" />
-    <None Include="Info %28weitere Kopie%29.plist" />
-    <None Include="Info %283. Kopie%29.plist" />
-    <None Include="Info %284. Kopie%29.plist" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
