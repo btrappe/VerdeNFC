@@ -61,8 +61,6 @@ namespace VerdeNFC.iOS
                 MainTabViewModel.Current.NFCStopListening += NfcIo.Current.StopListening;
                 NfcIo.registered = true;
             }
-            
-            //NfcIo.Current.StartListening(true);
         }
         //
         // This method is invoked when the application has loaded and is ready to run. In this 

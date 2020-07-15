@@ -14,9 +14,11 @@ namespace VerdeNFC.iOS
         public static NfcIo Current { get { if (_current == null) _current = new NfcIo(); return _current; } }
         private bool Enabled;
         NFCTagReaderSession NfcSession { get; set; }
+        private bool WriteMode;
 
         NfcIo()
         {
+            WriteMode = false;
         }
 
         /// <summary>
@@ -39,21 +41,69 @@ namespace VerdeNFC.iOS
             });
 
             var nMifareTag = _tag.GetNFCMiFareTag();
-            nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x04 }), (data, error) => {
-                byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-                data.ToArray().CopyTo(FirstTag, 16);
-                MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]);
-                MainTabViewModel.Current?.DataBag.SetData(FirstTag);
-            });
 
-            NfcSession.InvalidateSession();
-            NfcSession = null;
-
+            if (!WriteMode)
+            {
+                // read
+                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x04 }), (data, error) =>
+                {
+                    if ((data != null) && (error == null) && (data.Count() == 16))
+                    {
+                        byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
+                        data.ToArray().CopyTo(FirstTag, 16);
+                        nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x08 }), (data2, error2) =>
+                        {
+                            if ((data2 != null) && (error2 == null) && (data2.Count() == 16))
+                            {
+                                data2.ToArray().CopyTo(FirstTag, 32);
+                                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x0C }), (data3, error3) =>
+                                {
+                                    if ((data3 != null) && (error3 == null) && (data3.Count() == 16))
+                                    {
+                                        data3.ToArray().CopyTo(FirstTag, 48);
+                                        MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]);
+                                        MainTabViewModel.Current?.DataBag.SetData(FirstTag);
+                                    }
+                                    else
+                                    {
+                                        if (MainTabViewModel.Current != null)
+                                        {
+                                            MainTabViewModel.Current.cbNFCRead = false;
+                                            MainTabViewModel.Current.cbNFCWrite = false;
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                if (MainTabViewModel.Current != null)
+                                {
+                                    MainTabViewModel.Current.cbNFCRead = false;
+                                    MainTabViewModel.Current.cbNFCWrite = false;
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        if (MainTabViewModel.Current != null)
+                        {
+                            MainTabViewModel.Current.cbNFCRead = false;
+                            MainTabViewModel.Current.cbNFCWrite = false;
+                        }
+                    }
+                });
+            }
+            else
+            {
+                // write
+            }
         }
 
         public override void DidInvalidate(NFCTagReaderSession session, NSError error)
         {
-            // throw new NotImplementedException();
+            MainTabViewModel.Current.cbNFCRead = false;
+            MainTabViewModel.Current.cbNFCWrite = false;
         }
 
         public bool IsAvailable()
@@ -84,9 +134,11 @@ namespace VerdeNFC.iOS
             if (!IsEnabled()) // todo: offer possibility to open dialog
                 throw new InvalidOperationException("NFC is not enabled");
 
+            WriteMode = Write;
+
             NfcSession = new NFCTagReaderSession(NFCPollingOption.Iso14443, this, null)
             {
-                AlertMessage = "NFC not available."
+                AlertMessage = "Present your NFC tag"
             };
 
             NfcSession?.BeginSession();
@@ -95,10 +147,10 @@ namespace VerdeNFC.iOS
 
         public void StopListening(bool Dummy)
         {
+            WriteMode = false;
             Enabled = false;
-            NfcSession.InvalidateSession();
+            NfcSession?.InvalidateSession();
             NfcSession = null;
-
         }
 
         /*

@@ -161,6 +161,9 @@ namespace VerdeNFC.ViewModels
             }
             set
             {
+                if (value == _cbNFCRead)
+                    return;
+
                 try
                 {
                     if (value)
@@ -209,6 +212,9 @@ namespace VerdeNFC.ViewModels
             }
             set
             {
+                if (value == _cbNFCWrite)
+                    return;
+
                 try
                 {
                     if (value)
