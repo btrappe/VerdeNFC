@@ -65,62 +65,8 @@ namespace VerdeNFC.iOS
 
             var nMifareTag = _tag.GetNFCMiFareTag();
 
-            if (!WriteMode)
-            {
-                // read
-                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x04 }), (data, error) =>
-                {
-                    if ((data != null) && (error == null) && (data.Count() == 16))
-                    {
-                        byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-                        data.ToArray().CopyTo(FirstTag, 16);
-                        nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x08 }), (data2, error2) =>
-                        {
-                            if ((data2 != null) && (error2 == null) && (data2.Count() == 16))
-                            {
-                                data2.ToArray().CopyTo(FirstTag, 32);
-                                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x0C }), (data3, error3) =>
-                                {
-                                    if ((data3 != null) && (error3 == null) && (data3.Count() == 16))
-                                    {
-                                        data3.ToArray().CopyTo(FirstTag, 48);
-                                        MainThread.BeginInvokeOnMainThread(() => MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]));
-                                        MainTabViewModel.Current?.DataBag.SetData(FirstTag);
-                                    }
-                                    else
-                                    {
-                                        if (MainTabViewModel.Current != null)
-                                        {
-                                            MainTabViewModel.Current.cbNFCRead = false;
-                                            MainTabViewModel.Current.cbNFCWrite = false;
-                                        }
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                if (MainTabViewModel.Current != null)
-                                {
-                                    MainTabViewModel.Current.cbNFCRead = false;
-                                    MainTabViewModel.Current.cbNFCWrite = false;
-                                }
-                            }
-                        });
-                    }
-                    else
-                    {
-                        if (MainTabViewModel.Current != null)
-                        {
-                            MainTabViewModel.Current.cbNFCRead = false;
-                            MainTabViewModel.Current.cbNFCWrite = false;
-                        }
-                    }
-                });
-            }
-            else
-            {
-                Task.Run(() => HandleWiteTag(nMifareTag));
-            }
+            var t = WriteMode ? Task.Run(() => HandleWiteTag(nMifareTag)):
+                                Task.Run(() => HandleReadTag(nMifareTag));
         }
 
         public override void DidInvalidate(NFCTagReaderSession session, NSError error)
@@ -168,23 +114,56 @@ namespace VerdeNFC.iOS
             Enabled = true;
         }
 
-        async void HandleWiteTag(INFCMiFareTag nMifareTag)
+        private async void HandleReadTag(INFCMiFareTag nMifareTag)
+        {
+            byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
+            byte[] data = await Read4Pages(nMifareTag, 4);
+
+            if (data != null)
+            {
+                data.CopyTo(FirstTag, 16);
+                data = await Read4Pages(nMifareTag, 8);
+
+                if (data != null)
+                {
+                    data.CopyTo(FirstTag, 32);
+                    data = await Read4Pages(nMifareTag, 12);
+
+                    if (data != null)
+                    {
+                        data.CopyTo(FirstTag, 48);
+                        MainThread.BeginInvokeOnMainThread(() => MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]));
+                        MainTabViewModel.Current?.DataBag.SetData(FirstTag);
+                    }
+                }
+            }
+
+            MainTabViewModel.Current.cbNFCRead = false;
+            MainTabViewModel.Current.cbNFCWrite = false;
+        }
+
+        private async void HandleWiteTag(INFCMiFareTag nMifareTag)
         {
             byte[] data = await Read4Pages(nMifareTag, 0);
+
             // write
             if (data != null)
             {
                 byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-                data.CopyTo(FirstTag, 0);
+                byte[] mem = new byte[80];
+                data.CopyTo(mem, 0);
+                byte[] dstData = MainTabViewModel.MergeTagData(FirstTag, mem);
 
                 bool result = true;
                 for (byte i = 4; result && (i < 16); i++)
-                    result = await WritePage(nMifareTag, i, FirstTag.Skip(4 * i).Take(4).ToArray());
+                    result = await WritePage(nMifareTag, i, dstData.Skip(4 * i).Take(4).ToArray());
 
-                MainTabViewModel.Current?.DataBag.SetData(FirstTag);
-                MainTabViewModel.Current.cbNFCRead = false;
-                MainTabViewModel.Current.cbNFCWrite = false;
+                if (result)
+                    MainTabViewModel.Current?.DataBag.SetData(dstData);
             }
+
+            MainTabViewModel.Current.cbNFCRead = false;
+            MainTabViewModel.Current.cbNFCWrite = false;
         }
 
         public void StopListening(bool Dummy)
