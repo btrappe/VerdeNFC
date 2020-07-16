@@ -84,10 +84,7 @@ namespace VerdeNFC.iOS
                                     if ((data3 != null) && (error3 == null) && (data3.Count() == 16))
                                     {
                                         data3.ToArray().CopyTo(FirstTag, 48);
-                                        MainThread.BeginInvokeOnMainThread(() =>
-                                        {
-                                            MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]);
-                                        });
+                                        MainThread.BeginInvokeOnMainThread(() => MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]));
                                         MainTabViewModel.Current?.DataBag.SetData(FirstTag);
                                     }
                                     else
@@ -122,20 +119,7 @@ namespace VerdeNFC.iOS
             }
             else
             {
-                byte[] data = Read4Pages(nMifareTag, 0).Result;
-                // write
-                if (data != null)
-                {
-                    byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-                    data.CopyTo(FirstTag, 0);
-
-                    bool result = true;
-                    for (byte i = 4; result && (i < 16); i++)
-                        result = WritePage(nMifareTag, i, FirstTag.Skip(4 * i).Take(4).ToArray()).Result;
-
-                    MainTabViewModel.Current.cbNFCRead = false;
-                    MainTabViewModel.Current.cbNFCWrite = false;
-                }
+                Task.Run(() => HandleWiteTag(nMifareTag));
             }
         }
 
@@ -184,6 +168,25 @@ namespace VerdeNFC.iOS
             Enabled = true;
         }
 
+        async void HandleWiteTag(INFCMiFareTag nMifareTag)
+        {
+            byte[] data = await Read4Pages(nMifareTag, 0);
+            // write
+            if (data != null)
+            {
+                byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
+                data.CopyTo(FirstTag, 0);
+
+                bool result = true;
+                for (byte i = 4; result && (i < 16); i++)
+                    result = await WritePage(nMifareTag, i, FirstTag.Skip(4 * i).Take(4).ToArray());
+
+                MainTabViewModel.Current?.DataBag.SetData(FirstTag);
+                MainTabViewModel.Current.cbNFCRead = false;
+                MainTabViewModel.Current.cbNFCWrite = false;
+            }
+        }
+
         public void StopListening(bool Dummy)
         {
             WriteMode = false;
@@ -191,174 +194,6 @@ namespace VerdeNFC.iOS
             NfcSession?.InvalidateSession();
             NfcSession = null;
         }
-
-        /*
-    private NFC;
-    private bool WriteMode;
-    private bool Enabled;
-
-    public delegate void TagDetectedDelegate(Tag tag);
-    public event TagDetectedDelegate TagDetected;
-
-    public NfcIo()
-    {
-        _nfcAdapter = NfcAdapter.GetDefaultAdapter(CurrentActivity);
-        WriteMode = false;
-        Enabled = false;
-    }
-
-    public bool IsAvailable()
-    {
-        var context = Application.Context;
-        if (context.CheckCallingOrSelfPermission(Manifest.Permission.Nfc) != Permission.Granted)
-            return false;
-
-        return _nfcAdapter != null;
-    }
-
-    public bool IsEnabled()
-    {
-        return _nfcAdapter?.IsEnabled ?? false;
-    }
-
-    public void StartListening(bool Write)
-    {
-        if (!IsAvailable())
-            throw new InvalidOperationException("NFC not available");
-
-        if (!IsEnabled()) // todo: offer possibility to open dialog
-            throw new InvalidOperationException("NFC is not enabled");
-
-        WriteMode = Write;
-
-        var ndefDetected = new IntentFilter(NfcAdapter.ActionNdefDiscovered);
-        ndefDetected.AddDataType("* /*");
-        var tagDetected = new IntentFilter(NfcAdapter.ActionTagDiscovered);
-        tagDetected.AddDataType("* /*");
-        var filters = new[] { tagDetected };
-        var intent = new Intent(CurrentActivity, CurrentActivity.GetType()).AddFlags(ActivityFlags.SingleTop);
-        var pendingIntent = PendingIntent.GetActivity(CurrentActivity, 0, intent, 0);
-        _nfcAdapter.EnableForegroundDispatch(CurrentActivity, pendingIntent, filters, new[] { new[] { Java.Lang.Class.FromType(typeof(MifareUltralight)).Name } });
-        Enabled = true;
-        //_nfcAdapter.EnableReaderMode(activity, this, NfcReaderFlags.NfcA | NfcReaderFlags.NoPlatformSounds, null);
-    }
-
-    public void StopListening(bool Dummy)
-    {
-        Enabled = false;
-        //_nfcAdapter?.DisableReaderMode(CrossNfc.CurrentActivity);
-        //_nfcAdapter?.DisableForegroundDispatch(CurrentActivity); // can be called from OnResume only
-    }
-
-    internal void CheckForNfcMessage(Intent intent)
-    {
-        if (!Enabled)
-            return;
-
-        if (intent.Action != NfcAdapter.ActionTechDiscovered)
-            return;
-
-        if (!(intent.GetParcelableExtra(NfcAdapter.ExtraTag) is Tag tag))
-            return;
-
-        try
-        {
-            var ev1 = MifareUltralight.Get(tag);
-
-            //TagDetected?.Invoke(tag);
-
-            ev1.Connect();
-            byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-            byte[] mem = new byte[80];
-
-            for (int i = 0; i < 20; i += 4)
-            {
-                byte[] payload = ev1.ReadPages(i);
-                Buffer.BlockCopy(payload, 0, mem, 4 * i, 16);
-            }
-
-            if (WriteMode)
-            {
-                byte[] dstData = MainTabViewModel.MergeTagData(FirstTag, mem);
-
-
-                // password auth
-                // var response = ev1.Transceive(new byte[]{
-                //            (byte) 0x1B, // PWD_AUTH
-                //            0,0,0,0 });
-
-    E            // Check if PACK is matching expected PACK
-                // This is a (not that) secure method to check if tag is genuine
-                //if ((response != null) && (response.Length >= 2))
-                //{
-                //}
-
-                for (int i = 4; i < 16; i++)
-                    ev1.WritePage(i, dstData.Skip(4 * i).Take(4).ToArray());
-
-                MainTabViewModel.Current?.DataBag.SetData(dstData);
-                WriteMode = false;
-            }
-            else
-            {
-                MainTabViewModel.Current?.SetControlsVisibility(mem[41]);
-                MainTabViewModel.Current?.DataBag.SetData(mem);
-            }
-            ev1.Close();
-            MainTabViewModel.Current.cbNFCRead = false;
-            MainTabViewModel.Current.cbNFCWrite = false;
-
-            try
-            {
-                // Use default vibration length
-                Vibration.Vibrate();
-            }
-            catch (FeatureNotSupportedException ex)
-            {
-                // Feature not supported on device
-            }
-            catch (Exception ex)
-            {
-                // Other error has occurred.
-            }
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                Vibration.Vibrate();
-                Thread.Sleep(1000);
-                Vibration.Vibrate();
-            }
-            catch (Exception ex)
-            {
-                // Other error has occurred.
-            }
-
-        }
-    }
-
-    public void OnTagDiscovered(Tag tag)
-    {
-        try
-        {
-            var techs = tag.GetTechList();
-            if (!techs.Contains(Java.Lang.Class.FromType(typeof(MifareUltralight)).Name))
-                return;
-
-            //   var ndef = Ndef.Get(tag);
-            //   ndef.Connect();
-            //   var ndefMessage = ndef.NdefMessage;
-            //   var records = ndefMessage.GetRecords();
-            //   ndef.Close();
-
-        }
-        catch
-        {
-            // handle errors
-        }
-    }
-    */
     }
 }
 
