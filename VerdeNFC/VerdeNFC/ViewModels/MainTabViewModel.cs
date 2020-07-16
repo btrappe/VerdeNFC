@@ -110,7 +110,7 @@ namespace VerdeNFC.ViewModels
                     OnPropertyChanged(nameof(RoastProfiles));
                 }
             }
-             
+
             if (!string.IsNullOrEmpty(RoastProfileSel.Data))
             {
                 // if (manually) template choosen -> load template
@@ -526,9 +526,14 @@ namespace VerdeNFC.ViewModels
                 if (RoastProfiles.Where(p => p.Id == r.Id).FirstOrDefault() == null)
                     RoastProfiles.Add(r);
 
+                // workaround for throwing OutOfRangeException in OnRoastProfileSelChanged on ios
+                if ((lastSelectedRoastProfile?.Id > 100) || (lastSelectedRoastProfile?.Id == 0))
+                    RoastProfiles.Remove(lastSelectedRoastProfile);
+
                 RoastProfileSel = RoastProfiles.Where(p => p.Id == r.Id).First();
             }
         }
+
         public static byte [] MergeTagData(byte [] mem1stCard, byte [] mem)
         {
             Buffer.BlockCopy(mem, 0, mem1stCard, 0, 16);

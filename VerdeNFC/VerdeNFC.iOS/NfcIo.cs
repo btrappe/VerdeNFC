@@ -4,6 +4,7 @@ using Foundation;
 using CoreNFC;
 using CoreFoundation;
 using VerdeNFC.ViewModels;
+using Xamarin.Essentials;
 
 namespace VerdeNFC.iOS
 {
@@ -61,7 +62,10 @@ namespace VerdeNFC.iOS
                                     if ((data3 != null) && (error3 == null) && (data3.Count() == 16))
                                     {
                                         data3.ToArray().CopyTo(FirstTag, 48);
-                                        MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]);
+                                        MainThread.BeginInvokeOnMainThread(() =>
+                                        {
+                                            MainTabViewModel.Current?.SetControlsVisibility(FirstTag[41]);
+                                        });
                                         MainTabViewModel.Current?.DataBag.SetData(FirstTag);
                                     }
                                     else
@@ -97,6 +101,40 @@ namespace VerdeNFC.iOS
             else
             {
                 // write
+                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x00 }), (data, error) =>
+                {
+                    // read UUID block
+                    if ((data != null) && (error == null) && (data.Count() == 16))
+                    {
+                        byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
+                        data.ToArray().CopyTo(FirstTag, 0);
+                        byte[] newData = new byte[6];
+                        newData[0] = 0xA2; newData[1] = 0x4;
+                        newData[2] = FirstTag[16]; newData[3] = FirstTag[17]; newData[4] = FirstTag[18]; newData[5] = FirstTag[19];
+                        nMifareTag.SendMiFareCommand(NSData.FromArray(newData), (data2, error2) =>
+                        {
+                            if ((data2 != null) && (error2 == null) && (data2.Count() == 1))
+                            {
+                            }
+                            else
+                            {
+                                if (MainTabViewModel.Current != null)
+                                {
+                                    MainTabViewModel.Current.cbNFCRead = false;
+                                    MainTabViewModel.Current.cbNFCWrite = false;
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        if (MainTabViewModel.Current != null)
+                        {
+                            MainTabViewModel.Current.cbNFCRead = false;
+                            MainTabViewModel.Current.cbNFCWrite = false;
+                        }
+                    }
+                });
             }
         }
 
