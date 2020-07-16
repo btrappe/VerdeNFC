@@ -5,6 +5,7 @@ using CoreNFC;
 using CoreFoundation;
 using VerdeNFC.ViewModels;
 using Xamarin.Essentials;
+using System.Threading.Tasks;
 
 namespace VerdeNFC.iOS
 {
@@ -20,6 +21,27 @@ namespace VerdeNFC.iOS
         NfcIo()
         {
             WriteMode = false;
+        }
+
+        public Task<byte[]> Read4Pages(INFCMiFareTag tag, byte page)
+        {
+            var tcs = new TaskCompletionSource<byte[]>();
+            tag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, page }), (data, error) =>
+            {
+                if ((data != null) && (error == null) && (data.Count() == 16))
+                    tcs.SetResult(data.ToArray());
+                else
+                    tcs.SetResult(null);
+            });
+            return tcs.Task;
+        }
+
+        public Task<bool> WritePage(INFCMiFareTag tag, byte page, byte [] data)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            tag.SendMiFareCommand(NSData.FromArray(new byte[] { 0xA2, page, data[0], data[1], data[2], data[3] }),
+                (tagdata, error) => tcs.SetResult((tagdata != null) && (error == null) && (tagdata.Count() == 1)));
+            return tcs.Task;
         }
 
         /// <summary>
@@ -100,41 +122,20 @@ namespace VerdeNFC.iOS
             }
             else
             {
+                byte[] data = Read4Pages(nMifareTag, 0).Result;
                 // write
-                nMifareTag.SendMiFareCommand(NSData.FromArray(new byte[] { 0x30, 0x00 }), (data, error) =>
+                if (data != null)
                 {
-                    // read UUID block
-                    if ((data != null) && (error == null) && (data.Count() == 16))
-                    {
-                        byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
-                        data.ToArray().CopyTo(FirstTag, 0);
-                        byte[] newData = new byte[6];
-                        newData[0] = 0xA2; newData[1] = 0x4;
-                        newData[2] = FirstTag[16]; newData[3] = FirstTag[17]; newData[4] = FirstTag[18]; newData[5] = FirstTag[19];
-                        nMifareTag.SendMiFareCommand(NSData.FromArray(newData), (data2, error2) =>
-                        {
-                            if ((data2 != null) && (error2 == null) && (data2.Count() == 1))
-                            {
-                            }
-                            else
-                            {
-                                if (MainTabViewModel.Current != null)
-                                {
-                                    MainTabViewModel.Current.cbNFCRead = false;
-                                    MainTabViewModel.Current.cbNFCWrite = false;
-                                }
-                            }
-                        });
-                    }
-                    else
-                    {
-                        if (MainTabViewModel.Current != null)
-                        {
-                            MainTabViewModel.Current.cbNFCRead = false;
-                            MainTabViewModel.Current.cbNFCWrite = false;
-                        }
-                    }
-                });
+                    byte[] FirstTag = MainTabViewModel.Current?.DataBag.GetData();
+                    data.CopyTo(FirstTag, 0);
+
+                    bool result = true;
+                    for (byte i = 4; result && (i < 16); i++)
+                        result = WritePage(nMifareTag, i, FirstTag.Skip(4 * i).Take(4).ToArray()).Result;
+
+                    MainTabViewModel.Current.cbNFCRead = false;
+                    MainTabViewModel.Current.cbNFCWrite = false;
+                }
             }
         }
 
