@@ -10,10 +10,16 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>MinimumOSVersion</key>
 	<string>13.0</string>
@@ -22,7 +28,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>de.edenweg.VerdeNFC</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.12</string>
+	<string>1.0.17</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -32,7 +38,7 @@
 	<key>NFCReaderUsageDescription</key>
 	<string>Read/Write Mifare Ultralight NFC tags for Bonaverde Berlin Coffee Roasting machine.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.12</string>
+	<string>1.0.17</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<string>com.apple.developer.nfc.readersession.iso7816.select-identifiers</string>
 </dict>
