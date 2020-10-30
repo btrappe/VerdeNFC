@@ -44,7 +44,7 @@ namespace VerdeNFC.Views
 
             text += string.Format("Type  {0:X2} Time_Stat_7 {1} min \n", mem[41], mem[42]);
 
-            text += "command ";
+            text += "command : ";
 
             switch (mem[41])
             {
@@ -91,19 +91,19 @@ namespace VerdeNFC.Views
                     text += "";
                     break;
                 case 0x0f:
-                    text += "filter usage reset";
+                    text += "reset filter counter";
                     break;
                 case 0x10:
                     text += "";
                     break;
                 case 0x11:
-                    text += "filter usage set to 30 (request filter)";
+                    text += "set filter usage to 30 (request filter)";
                     break;
                 case 0x12:
-                    text += "grind cleaning with special cleaning beans";
+                    text += "clean grinder with special cleaning beans";
                     break;
                 case 0x13:
-                    text += "maintenance  (descale brewing system) ";
+                    text += "maintenance (descale brewing system) ";
                     break;
                 default:
                     text += "unknown";
