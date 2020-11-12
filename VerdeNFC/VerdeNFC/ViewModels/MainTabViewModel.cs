@@ -320,22 +320,56 @@ namespace VerdeNFC.ViewModels
             // 1...99 - data source is Data member
             // 100..  - external data source (file or scanned NFC tag)
 
-            RoastProfiles.Add(new RoastProfile() { Id = 1, Name = "Brazil",                        Data = "AAB84B4B00 AAB8324B5A  AAB64B4B00 AAB6324B64 3C3C462D 32 02  1E  000501 D810 0005", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 2, Name = "80g Roast only",                Data = "AAAE4B5A05 AAAE415078  AAB4415A05 AAB4415050 37465A50 23 02  0F  000601 6113 0000", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 3, Name = "universal light roast",         Data = "AAB94B3205 AAB94B325A  AAB94B3205 AAB94B3232 3C463250 32 02  1E  000601 5D03 000A", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 4, Name = "universal medium roast",        Data = "AA645A3205 AA9632327D  AAB4463C05 AAC0323C78 376E3C2D 23 02  0F  000601 F501 000A", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 5, Name = "universal dark roast ",         Data = "AA645A3205 AA9632327D  AAB4463C05 AAC0323C96 376E3C2D 23 02  0F  000601 8312 000A", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 6, Name = "80g Slow Roast RGB (10h)",      Data = "AAB84B4B00 AAB832465A  AAB64B5A00 AAB6324664 3C465A2D 32 01  2D  000501 CCFE 0258", isManualChoiceAllowed = true });
+            // sections :  1 - 40 -> RGB profiles from Bonaverde's suppliers
+            //            41 - 60 -> roast profiles
+            //            81 - 90 -> grind & brew profiles
+            //            91 - 99 -> maintenance functions
+//          Bonaverde supplier, but no rfid known yet.
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Rodolfo Ruffatti/El Salvador (x/y)",     Data = "", isManualChoiceAllowed = true });
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Aldo Parducci/El Salvador (x/y)",        Data = "", isManualChoiceAllowed = true });
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Exelso Cafe/Colombia (x/y)",             Data = "", isManualChoiceAllowed = true });
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Female Growers/Guatamala (x/y)",         Data = "", isManualChoiceAllowed = true });
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Henry Hueck/Nicaragua (x/y)",            Data = "", isManualChoiceAllowed = true });
+//          RoastProfiles.Add(new RoastProfile() { Id =  X, Name = "Roast : Puerto Escondido (x)",           Data = "", isManualChoiceAllowed = true });
 
-            RoastProfiles.Add(new RoastProfile() { Id = 7, Name = "80g Roasters Grind/Brew",       Data = "AAB0644B05 AAB0414678  AABA5F5A05 AABA41463C 376E5A2D 23 05  1E  000601 AB08 0000", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 8, Name = "20g Roasters Grind/Brew",       Data = "AAB44B4B00 AAB432464B  AAAE4B5A00 AAAE32465A 3C6E5A14 14 05  2D  000501 4A01 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  0, Name = "(select one)",                           Data = "", isManualChoiceAllowed = false });
 
-            RoastProfiles.Add(new RoastProfile() { Id = 90, Name = "Brew only 80g",                Data = "AA41644B05 AA4B413278  AA565F5005 AA5D414696 37375A2D 23 06  0F  000601 2BF2 0000", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 91, Name = "Maintenance: Air Filter",      Data = "AA96644B05 AA96413278  AAAC5F5005 AAB6414696 376E5A2D 23 0F  0F  000601 8D7C 0000", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 92, Name = "Maintenance: Descale",         Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isManualChoiceAllowed = true });
-            RoastProfiles.Add(new RoastProfile() { Id = 93, Name = "Maintenance: Grinder clean",   Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  1, Name = "Ricardo Tavares/Brazil (50gr/6dl)",      Data = "AAA0504B 05AAAA41 4678AAB4 414B05AA B4414B96 375A5A2D 23011E00 0601891A 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  2, Name = "Ricardo Tavares/Brazil (80gr/9dl)",      Data = "AAB84B4B 00AAB832 465AAAB6 4B5A00AA B6324664 3C465A2D 32011E00 05015DFD 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  3, Name = "Flor de Corazon/Mexico (55gr/6dl)",      Data = "AAB4324B 00AAB432 4650AAAE 325A00AA AE32465A 3C465A2D 23010F00 0501ED37 0003", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  4, Name = "Flor de Corazon/Mexico (80gr/9dl)",      Data = "AAB44B4B 00AAB432 4655AAB4 4B5A00AA B432465F 3C465A2D 32011E00 05012C78 0001", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  5, Name = "Ocean College/Costa Rica (84gr/9dl)",    Data = "AAB84B4B 00AAB832 465AAAB6 4B5A00AA B6324664 3C465A2D 32011E00 0501F205 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  6, Name = "Luis Alberto/Nicaragua (80gr/9dl)",      Data = "AAB84B4B 00AAB832 465AAAB6 4B5A00AA B6324664 3C465A2D 32011E00 050149C9 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  7, Name = "Alfaro Family/El Salvador (80gr/9dl)",   Data = "AAB04B5A 05AAB041 5078AAB4 415A05AA B4415050 37465A50 32011E00 06013F40 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  8, Name = "Surprise 1 (80gr/9dl)",                  Data = "AAB84B4B 00AAB832 465FAAB6 4B5A00AA B632465A 3C465A2D 32011E00 05019D29 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id =  9, Name = "Wallace Family/Colombia (50gr/6dl)",     Data = "AAB0644B 05AAB041 4678AABA 5F5A05AA BA41463C 376E5A2D 23011E00 060171AC 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 10, Name = "Wallace Family/Colombia (80gr/9dl)",     Data = "AAB64B4B 00AAB632 464BAAB4 4B5A00AA B4324664 3C465A2D 32011E00 0501F066 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 11, Name = "Wallace Family/Colombia alt (80gr/9dl)", Data = "AAB64C4B 00AAB638 464EAAB6 4C5A00AA B6334664 3C465A2D 32011E00 0501B282 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 12, Name = "Tavares Night roast/brew (10h/80gr/9dl)",Data = "AAB84B4B 00AAB832 465AAAB6 4B5A00AA B6324664 3C465A2D 32012D00 0501CCFE 0258", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 13, Name = "Coffee Changer Badge",                   Data = "AA96644B 05AA9641 3278AAA2 5F5005AA B6414696 376E5A2D 23010F00 0601AB13 0000", isManualChoiceAllowed = true });
 
-            RoastProfiles.Add(new RoastProfile() { Id = 0, Name = "(choose one)", Data = "", isManualChoiceAllowed = false });
+            RoastProfiles.Add(new RoastProfile() { Id = 41, Name = "Roast : universal, light (50gr/6dl)",    Data = "AAB94B32 05AAB94B 325AAAB9 4B3205AA B94B3232 3C463250 32021E00 06015D03 000A", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 42, Name = "Roast : universal, medium (50gr/6dl)",   Data = "AA645A32 05AA9632 327DAAB4 463C05AA C0323C78 376E3C2D 23020F00 0601F501 000A", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 43, Name = "Roast : universal, dark (50gr/6dl)",     Data = "AA645A32 05AA9632 327DAAB4 463C05AA C0323C96 376E3C2D 23020F00 06018312 000A", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 44, Name = "Roast : Alfaro Family (80gr/9dl)",       Data = "AAAE4B5A 05AAAE41 5078AAB4 415A05AA B4415050 37465A50 23020F00 06016113 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 44, Name = "Roast : universal (80gr/1L)",            Data = "AAB24B4B 00AAB232 4678AAB5 4B5A00AA B5324655 3C465A2D 32021E00 05017903 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 45, Name = "Roast : postcard (50gr/6dl)",            Data = "AAA0644B 05AAA041 4658AAB2 5FF005AA B241468C 376E5A2D 23020F00 06019D11 0001", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 46, Name = "Roast : The Wave (50gr/6dl)",            Data = "AAA0644B 05AAA041 4655AAB2 5F5005AA B2414687 375A5A2D 23020F00 0601740F 0001", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 47, Name = "Roast : Flash Pump (80gr/9dl)",          Data = "AAAA644B 00AAB841 4664AAB4 414600AA B4414655 3C463C50 3C023C00 05011E10 0007", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 48, Name = "Roast : Ojo de Aqua (80gr/9dl)",         Data = "AAB44B4B 05AAB44B 465FAAB2 4B4B05AA B24B4687 373C4650 32023C00 06016A13 0007", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 49, Name = "Roast : Monpaka (80gr/9dl)",             Data = "AAAA644B 00AAB441 4696AAB2 415A00AA B041465F 3C5A5A2D 23020F00 0501EB10 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 50, Name = "Roast : Flor de Corazon (80gr/9dl)",     Data = "AA92644B 05AA9241 4678AAAC 5F5005AA B23C4696 37465A2D 23020F00 0601E401 0001", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 51, Name = "Roast : Ricardo Tavares (80gr/9dl)",     Data = "AAA0644B 05AAA041 4655AAB2 5F5005AA B2414687 37465A2D 23030F00 06011E12 0000", isManualChoiceAllowed = true });
+ 
+            RoastProfiles.Add(new RoastProfile() { Id = 81, Name = "Grind & Brew (20/50gr)",                 Data = "AAB44B4B 00AAB432 464BAAAE 4B5A00AA AE32465A 3C6E5A14 14052D00 05014A01 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 82, Name = "Grind & Brew (80gr)",                    Data = "AAB0644B 05AAB041 4678AABA 5F5A05AA BA41463C 376E5A2D 23051E00 0601AB08 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 83, Name = "Brew only (70C)",                        Data = "AAAA644B 00AAB841 4664AAB2 415A00AA B0414655 3C465A2D 23060F00 0501A602 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 84, Name = "Brew only (90C)",                        Data = "AA41644B 05AA4B41 3278AA56 5F5005AA 5D414696 37375A2D 23060F00 06012BF2 0000", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 85, Name = "Grind only",                             Data = "AAB24B4B 00AAB232 4678AAB5 4B5A00AA B5324655 3C465A2D 32041E00 05011A02 0005", isManualChoiceAllowed = true });
+            
+            RoastProfiles.Add(new RoastProfile() { Id = 97, Name = "Descale brewsystem",                     Data = "AAB44B4B 05AAB44B 465FAAB2 4B5005AA B24B4687 37465A2D 23132D00 06017F56 0007", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 98, Name = "Clean grinder",                          Data = "AAB44B4B 00AAB432 464EAAB4 4B5A99AA B4324666 3C465A2D 32121E00 05018D5E 0005", isManualChoiceAllowed = true });
+            RoastProfiles.Add(new RoastProfile() { Id = 99, Name = "Reset air filter counter",               Data = "AA96644B 05AA9641 3278AAAC 5F5005AA B6414696 376E5A2D 230F0F00 06018D7C 0000", isManualChoiceAllowed = true });
 
             RoastProfileSel = RoastProfiles[RoastProfiles.Count - 1];
             lastSelectedRoastProfile = RoastProfiles[RoastProfiles.Count - 1];
@@ -488,31 +522,26 @@ namespace VerdeNFC.ViewModels
                     cbMultiUseEnabled = true;
                     break;
                 case 0x0f:
-                    r = new RoastProfile() { Id = 91, Name = "Air Filter Reset", Data = "AA96644B05 AA96413278  AAAC5F5005 AAB6414696 376E5A2D 23 0F  0F  000601 8D7C 0000", isManualChoiceAllowed = true };
+                    r = new RoastProfile() { Id = 99, Name = "Reset air filter counter", Data = "AA96644B 05AA9641 3278AAAC 5F5005AA B6414696 376E5A2D 230F0F00 06018D7C 0000", isManualChoiceAllowed = true };
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
                     break;
                 case 0x12:
-                    r = new RoastProfile() { Id = 93, Name = "Maintenance: Grinder clean", Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isManualChoiceAllowed = true };
+                    r = new RoastProfile() { Id = 98, Name = "Clean grinder", Data = "AAB44B4B00 AAB432464E  AAB44B5A99 AAB4324666 3C465A2D 32 12  1E  000501 8D5E 0005", isManualChoiceAllowed = true };
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
                     break;
                 case 0x13:
-                    r = new RoastProfile() { Id = 92, Name = "Maintenance: Descale", Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isManualChoiceAllowed = true };
+                    r = new RoastProfile() { Id = 97, Name = "Descale brewsystem", Data = "AAB44B4B05 AAB44B465F  AAB24B5005 AAB24B4687 37465A2D 23 13  2D  000601 7F56 0007", isManualChoiceAllowed = true };
                     nPauseEnabled = false;
                     cbMultiUseEnabled = true;
                     break;
 
-                // RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isManualChoiceAllowed = true});
-                // RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isManualChoiceAllowed = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)",        Data = "", isManualChoiceAllowed = true});
+                // RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)",      Data = "", isManualChoiceAllowed = true});
                 // RoastProfiles.Add(new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isManualChoiceAllowed = false});
-                // RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isManualChoiceAllowed = false});
-                // RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isManualChoiceAllowed = false});
-                // RoastProfiles.Add(new RoastProfile() { Id = 101, Name = "(RGB from NFC or File)", Data = "", isManualChoiceAllowed = true});
-                // RoastProfiles.Add(new RoastProfile() { Id = 102, Name = "(Roast from NFC or File)", Data = "", isManualChoiceAllowed = true});
-                // RoastProfiles.Add(new RoastProfile() { Id = 103, Name = "(Grind/Brew from NFC or File)", Data = "", isManualChoiceAllowed = false});
-                // RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)", Data = "", isManualChoiceAllowed = false});
-                // RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)", Data = "", isManualChoiceAllowed = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 104, Name = "(Grind from NFC or File)",      Data = "", isManualChoiceAllowed = false});
+                // RoastProfiles.Add(new RoastProfile() { Id = 105, Name = "(Brew from NFC or File)",       Data = "", isManualChoiceAllowed = false});
 
                 default:
                     r = new RoastProfile() { Id = 92, Name = "(unknown)", Data = "", isManualChoiceAllowed = false };
